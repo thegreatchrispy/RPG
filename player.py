@@ -6,23 +6,26 @@
 import pygame
 from colorPalette import *
 
-
-# Define the movement directions
+# -------------------------------------------------------------
+# Definitions:
+# Dictionary used to define movement directions.
+# Process maps each key to a tuple that represents the unit
+# vector of the direction key pressed.
 MOVEMENTS = {pygame.K_LEFT: (-1,0),
              pygame.K_RIGHT: (1,0),
              pygame.K_UP: (0,-1),
              pygame.K_DOWN: (0,1) }
 PLAYERSIZE = 32 # size of player sprite in pixels
-
-
-def create_test_shape(self, size, color):
+# -------------------------------------------------------------
+# Function definitions:
+def create_test_shape(size, color):
     # Function needed to create a surface to represent the character
     surface = pygame.Surface(size)
     surface.fill(color)
     surface = surface.convert()
     return surface
-
-
+# -------------------------------------------------------------
+# Class definition:
 class Player(pygame.sprite.Sprite):
     # Class containing the sprite information about the player
     # Attributes:
@@ -33,7 +36,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
         self.pos = [x,y]
-        self.image = create_test_shape(PLAYERSIZE, WHITE)
+        self.image = create_test_shape((PLAYERSIZE,PLAYERSIZE), WHITE)
         self.rect = self.image.get_rect()
         self.size = self.rect.size
 
