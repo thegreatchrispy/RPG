@@ -1,1 +1,2 @@
-__author__ = 'chris'
+BLACK = (0,0,0)
+WHITE = (255,255,255)
