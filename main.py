@@ -34,9 +34,13 @@ from pygame.locals import *
 # Define constants:
 WINDOWWIDTH = 640
 WINDOWHEIGHT = 480
+MOVESPEED = 6
+SPAWNPOINT = (0,0)
+
 BGCOLOR = BLACK
 PLAYERSIZE = 32 # size of player sprite in pixels
 TITLE = "RPG" # Game title
+
 # -------------------------------------------------------------
 # Define variables:
 
@@ -50,38 +54,62 @@ def set_background(screen, color):
     screen.blit(background,(0,0))
     return background
 
+def terminate():
+    pygame.quit()
+    sys.exit()
+
+def checkForQuit():
+    for event in pygame.event.get():
+        if event == QUIT:
+            terminate()
+        if event == KEYDOWN:
+            if event.key == K_ESCAPE:
+                terminate()
+        break
+
+def noWallCollision(rect):
+    return True
+
 # -------------------------------------------------------------
 # Main Game Loop:
 def main():
     # Starting point of the game
     pygame.init() # initialize pygame modules
+    mainClock = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
-    background = set_background(DISPLAYSURF,BGCOLOR)
+    #background = set_background(DISPLAYSURF,BGCOLOR)
     pygame.display.set_caption(TITLE) # Game title in the window.
-    #mainClock = pygame.time.Clock()
-    KEYSPRESSED = []
-    player = Player(0,0) # coordinates of spawn point
-    allsprites = pygame.sprite.RenderPlain((player))
 
-    while True: # main game loop
+    player = pygame.Rect(WINDOWWIDTH / 2, WINDOWHEIGHT / 2, PLAYERSIZE, PLAYERSIZE)
+    playerImage = pygame.image.load('TESTIMAGE.png')
+
+
+    moveLeft = False
+    moveRight = False
+    moveUp = False
+    moveDown = False
+
+
+    while True:  # main game loop
         for event in pygame.event.get():
             if event.type == QUIT:
-                pygame.quit()
-                sys.exit()
+                terminate()
             if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    terminate()
+                # change the keyboard variables
                 if event.key == K_LEFT or event.key == ord('a'):
-                    moveLeft = True
                     moveRight = False
+                    moveLeft = True
                 if event.key == K_RIGHT or event.key == ord('d'):
                     moveLeft = False
                     moveRight = True
                 if event.key == K_UP or event.key == ord('w'):
-                    moveUp = True
                     moveDown = False
+                    moveUp = True
                 if event.key == K_DOWN or event.key == ord('s'):
                     moveUp = False
                     moveDown = True
-
             if event.type == KEYUP:
                 if event.key == K_LEFT or event.key == ord('a'):
                     moveLeft = False
@@ -91,33 +119,26 @@ def main():
                     moveUp = False
                 if event.key == K_DOWN or event.key == ord('s'):
                     moveDown = False
+                if event.key == ('r'):
+                    player.topleft = (SPAWNPOINT)
 
-            else:
-                pass
+        # draw the background onto the surface
+        DISPLAYSURF.fill(BGCOLOR)
 
+        if moveDown and player.bottom < WINDOWHEIGHT:
+            player.top += MOVESPEED
+        if moveUp and player.top > 0:
+            player.top -= MOVESPEED
+        if moveLeft and player.right < WINDOWWIDTH:
+            player.left -= MOVESPEED
+        if moveRight and player.bottom < WINDOWHEIGHT:
+            player.right += MOVESPEED
 
-        moveLeft = False
-        moveRight = False
-        moveUp = False
-        moveDown = False
+        # draw the block onto the surface
+        DISPLAYSURF.blit(playerImage, player)
 
-        if moveLeft and player.rect.left > 0:
-            KEYSPRESSED.append(K_LEFT)
-            player.move_char(KEYSPRESSED, background.get_rect())
-        if moveRight and player.rect.right < WINDOWWIDTH:
-            KEYSPRESSED.append(K_RIGHT)
-            player.move_char(KEYSPRESSED, background.get_rect())
-        if moveUp and player.rect.top > 0:
-            KEYSPRESSED.append(K_UP)
-            player.move_char(KEYSPRESSED, background.get_rect())
-        if moveDown and player.rect.bottom < WINDOWHEIGHT:
-            KEYSPRESSED.append(K_DOWN)
-            player.move_char(KEYSPRESSED, background.get_rect())
-
-        allsprites.update()
-        DISPLAYSURF.blit(background, (0,0))
-        allsprites.draw(DISPLAYSURF)
-        pygame.display.flip()
+        pygame.display.update()
+        mainClock.tick(40)
 
 if __name__ == "__main__":
     main()

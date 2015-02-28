@@ -31,7 +31,7 @@ class Player(pygame.sprite.Sprite):
     # Attributes:
     #   pos     -- position on the screen
     #   image   -- surface object representing the player
-    #   rect    -- rectangle of the player sprite
+    #   rect    -- rect object of the player sprite
 
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
@@ -42,14 +42,3 @@ class Player(pygame.sprite.Sprite):
 
     def update(self):
         self.rect.topleft = self.pos
-
-    def move_char(self, keys_pressed, rect):
-        # For each key that is pressed, move
-        # the player in the right direction
-        pixels = 2
-
-        for key in keys_pressed.list:
-            self.pos[0] = self.pos[0] + MOVEMENTS[key][0] * pixels
-            self.pos[1] = self.pos[1] + MOVEMENTS[key][1] * pixels
-        self.rect.move(self.pos)
-        self.update()
