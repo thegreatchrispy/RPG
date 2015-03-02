@@ -34,7 +34,7 @@ from pygame.locals import *
 # Define constants:
 WINDOWWIDTH = 640
 WINDOWHEIGHT = 480
-MOVESPEED = 6
+MOVESPEED = 4
 SPAWNPOINT = (0,0)
 
 BGCOLOR = BLACK
@@ -119,7 +119,7 @@ def main():
                     moveUp = False
                 if event.key == K_DOWN or event.key == ord('s'):
                     moveDown = False
-                if event.key == ('r'):
+                if event.key == ord('r'):
                     player.topleft = (SPAWNPOINT)
 
         # draw the background onto the surface
@@ -129,16 +129,16 @@ def main():
             player.top += MOVESPEED
         if moveUp and player.top > 0:
             player.top -= MOVESPEED
-        if moveLeft and player.right < WINDOWWIDTH:
+        if moveLeft and player.left > 0:
             player.left -= MOVESPEED
-        if moveRight and player.bottom < WINDOWHEIGHT:
-            player.right += MOVESPEED
+        if moveRight and player.right < WINDOWWIDTH:
+            player.left += MOVESPEED
 
         # draw the block onto the surface
         DISPLAYSURF.blit(playerImage, player)
 
         pygame.display.update()
-        mainClock.tick(40)
+        mainClock.tick(30)
 
 if __name__ == "__main__":
     main()
